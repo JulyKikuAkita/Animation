@@ -8,9 +8,62 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State private var animationAmount: CGFloat = 1
+    @State private var animationAmount: CGFloat = 0.0
+
 
     var body: some View {
+        VStack {  //animation modifier
+            Stepper("Scale amount", value: $animationAmount.animation(
+                Animation.easeOut(duration: 1)
+                    .repeatCount(3, autoreverses: true)
+            ), in: 1...10)
+
+            Spacer()
+
+            HStack{
+                VStack {
+                    Text("Explicit animaiton")
+                    Button("Tap me"){
+                        withAnimation {
+                            animationAmount += 360
+                        }
+                    }
+                    .padding(40)
+                    .background(Color.red)
+                    .foregroundColor(.white)
+                    .clipShape(Circle())
+                    .rotation3DEffect(.degrees(animationAmount), axis: (x:1, y:0, z:0))
+
+                }
+
+                VStack{
+                    Text("No explicit animaiton")
+                    Button("Tap me"){
+                        animationAmount += 180
+                    }
+                    .padding(40)
+                    .background(Color.black)
+                    .foregroundColor(.white)
+                    .clipShape(Circle())
+                    .rotation3DEffect(.degrees(animationAmount), axis: (x:0, y:1, z:0))
+                }
+
+                VStack{
+                    Text("z axis")
+                    Button("Tap me"){
+                        withAnimation(.interactiveSpring(response: 1, dampingFraction: 2, blendDuration: 1)){
+                            animationAmount += 360
+                        }
+                    }
+                    .padding(40)
+                    .background(Color.blue)
+                    .foregroundColor(.white)
+                    .clipShape(Circle())
+                    .rotation3DEffect(.degrees(animationAmount), axis: (x:0, y:0, z:1))
+                }
+            }
+        }
+
         Button("tap me"){
 //            animationAmount *= 1.0
         }
