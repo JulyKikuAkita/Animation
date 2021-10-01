@@ -7,6 +7,17 @@
 
 import SwiftUI
 
+struct CornerRotateModifer: ViewModifier {
+    let amount: Double
+    let anchor: UnitPoint
+
+    func body(content: Content) -> some View {
+        // clipped: the view rotates the parts that are lying outside its natural rectangle don’t get drawn.
+        content.rotationEffect(.degrees(amount), anchor: anchor)
+            .clipped()
+    }
+}
+
 struct ContentView: View {
     @State private var isShowinRed = false
 
@@ -20,10 +31,11 @@ struct ContentView: View {
                 }
 
                 if isShowinRed {
-                    Rectangle()
-                        .fill(Color.red)
-                        .frame(width: 100, height: 100)
-                        .transition(.asymmetric(insertion: .scale, removal: .opacity))
+                    Ellipse()
+                        .fill(Color.green)
+                        .frame(width: 300, height: 300)
+//                        .transition(.asymmetric(insertion: .scale, removal: .opacity))
+                        .transition(.pivot)
                 }
             }
         }
@@ -33,5 +45,12 @@ struct ContentView: View {
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
+    }
+}
+
+
+extension AnyTransition {
+    static var pivot: AnyTransition {
+        .modifier(active: CornerRotateModifer(amount: -90, anchor: .bottomTrailing), identity: CornerRotateModifer(amount: 0, anchor: .topTrailing))
     }
 }
