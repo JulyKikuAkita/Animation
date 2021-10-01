@@ -8,86 +8,20 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State private var animationAmount: CGFloat = 0.0
+    @State private var enabled = false
 
 
     var body: some View {
-        VStack {  //animation modifier
-            Stepper("Scale amount", value: $animationAmount.animation(
-                Animation.easeOut(duration: 1)
-                    .repeatCount(3, autoreverses: true)
-            ), in: 1...10)
-
-            Spacer()
-
-            HStack{
-                VStack {
-                    Text("Explicit animaiton")
-                    Button("Tap me"){
-                        withAnimation {
-                            animationAmount += 360
-                        }
-                    }
-                    .padding(40)
-                    .background(Color.red)
-                    .foregroundColor(.white)
-                    .clipShape(Circle())
-                    .rotation3DEffect(.degrees(animationAmount), axis: (x:1, y:0, z:0))
-
-                }
-
-                VStack{
-                    Text("No explicit animaiton")
-                    Button("Tap me"){
-                        animationAmount += 180
-                    }
-                    .padding(40)
-                    .background(Color.black)
-                    .foregroundColor(.white)
-                    .clipShape(Circle())
-                    .rotation3DEffect(.degrees(animationAmount), axis: (x:0, y:1, z:0))
-                }
-
-                VStack{
-                    Text("z axis")
-                    Button("Tap me"){
-                        withAnimation(.interactiveSpring(response: 1, dampingFraction: 2, blendDuration: 1)){
-                            animationAmount += 360
-                        }
-                    }
-                    .padding(40)
-                    .background(Color.blue)
-                    .foregroundColor(.white)
-                    .clipShape(Circle())
-                    .rotation3DEffect(.degrees(animationAmount), axis: (x:0, y:0, z:1))
-                }
-            }
-        }
 
         Button("tap me"){
-//            animationAmount *= 1.0
+            enabled.toggle()
         }
-        .padding(50)
-        .background(Color.green)
+        .frame(width: 200, height: 200)
+        .background(enabled ? Color.green : Color.orange)
+        .animation(nil)
         .foregroundColor(.white)
-        .clipShape(Ellipse())
-        .overlay(
-            Ellipse()
-                .stroke(Color.black)
-                .scaleEffect(animationAmount)
-                .opacity(Double(2 - animationAmount))
-                .animation(
-                    Animation.easeInOut(duration: 1)
-                        .repeatForever(autoreverses: false)
-                )
-        )
-        .onAppear {
-            self.animationAmount = 2
-        }
-        .scaleEffect(animationAmount)
-//        .blur(radius: (animationAmount - 1) * 1.2)
-//        .animation(.interpolatingSpring(stiffness: 50, damping: 1))
-
+        .clipShape(RoundedRectangle(cornerRadius: enabled ? 60 : 0))
+        .animation(.interpolatingSpring(stiffness: 10, damping: 1))
     }
 }
 
