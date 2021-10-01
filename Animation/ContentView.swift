@@ -20,6 +20,15 @@ struct ContentView: View {
 
             Spacer()
 
+            Button("All axis spin"){
+                animationAmount += 180
+            }
+            .padding(100)
+            .background(Color.orange)
+            .foregroundColor(.white)
+            .clipShape(Circle())
+            .rotation3DEffect(.degrees(animationAmount), axis: (x:1, y:1, z:1))
+
             HStack{
                 VStack {
                     Text("Explicit animaiton")
